@@ -76,4 +76,10 @@ class Patient:
         """
         return summary.strip()
 
+p1 = Patient(1)
+p1.get_date_of_birth = datetime.date(2000, 1, 1)
+p1.contact_details = ContactDetails('John', 'mike', '<mike@email>', 123456789, 25)
+p1.book_appointments(datetime.date(2025, 11, 1), 'Treatment')
+print(p1.__dict__)
+
 

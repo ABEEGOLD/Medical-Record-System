@@ -7,7 +7,7 @@ class ContactDetails:
         self.phone_number = phone_number
 
     def __repr__(self):
-        return f"{self.first_name} {self.last_name} ({self.age}) <{self.email}> Phone: {self.phone_number}"
+        return f"First_name: {self.first_name} , Last_name: {self.last_name} , Email: <{self.email}> Phone: {self.phone_number} Age: {self.age}"
 
     @property
     def get_first_name(self):
