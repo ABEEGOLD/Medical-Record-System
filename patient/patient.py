@@ -1,7 +1,5 @@
 import datetime
 
-from contact_details import ContactDetails
-
 class Patient:
     def __init__(self, patient_id:int):
         self.id = patient_id
@@ -59,27 +57,5 @@ class Patient:
     def get_appointments(self):
         return self.appointments
 
-    def book_appointments(self, appointment_date, reason):
-        if isinstance(appointment_date, datetime.date) and isinstance(reason, str):
-            self.appointments.append({'date': appointment_date, 'reason': reason})
-        else:
-            raise TypeError('Invalid appointment details')
-
-    def get_summary(self):
-        summary = f"""        
-        Patient ID: {self.id}
-        Contact: {self.contact_details}
-        Date of Birth: {self.date_of_birth}
-        Medical History: {self.medical_history}
-        Medical Notes: {self.medical_note}
-        Appointments: {self.appointments}
-        """
-        return summary.strip()
-
-p1 = Patient(1)
-p1.get_date_of_birth = datetime.date(2000, 1, 1)
-p1.contact_details = ContactDetails('John', 'mike', '<mike@email>', 123456789, 25)
-p1.book_appointments(datetime.date(2025, 11, 1), 'Treatment')
-print(p1.__dict__)
 
 
