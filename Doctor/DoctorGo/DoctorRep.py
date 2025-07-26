@@ -1,10 +1,16 @@
 import datetime
 
-from Doctor.DoctorGo import Contact_details
+
+from Contact_details import ContactDetails
+
 
 class Doctor_profile:
-    def __init__(self, doctor_id, date_of_birth:str, email:str, phone_number:int):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.phone_number = phone_number
+    def __init__(self, doctor_id, specialization:str, contact_details:ContactDetails):
+        self.doctor_id = doctor_id
+        self.specialization = specialization
+        self.contact_details = contact_details
+
+        def get_info(self):
+            return ({self.doctor_id}), ({self.specialization}), ({self.contact_details})
+
+
