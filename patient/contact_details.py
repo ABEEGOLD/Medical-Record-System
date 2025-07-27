@@ -1,13 +1,13 @@
 class ContactDetails:
-    def __init__(self, first_name:str, last_name:str, email:str, phone_number:int,age:int):
+    def __init__(self, first_name:str, last_name:str, email:str, phone_number:int):
         self.first_name = first_name
         self.last_name = last_name
-        self.age = age
         self.email = email
         self.phone_number = phone_number
 
+
     def __repr__(self):
-        return f"First_name: {self.first_name} , Last_name: {self.last_name} , Email: <{self.email}> Phone: {self.phone_number} Age: {self.age}"
+        return f"First_name: {self.first_name} , Last_name: {self.last_name} , Email: <{self.email}> Phone: {self.phone_number}"
 
     @property
     def get_first_name(self):
@@ -45,12 +45,3 @@ class ContactDetails:
             self.phone_number = value
         else:
             raise TypeError('Phone number must be a number')
-    @property
-    def get_age(self):
-        return self.age
-    @get_age.setter
-    def get_age(self, value):
-        if type(value) == int:
-            self.age = value
-        else:
-            raise TypeError('Age must be a number')
