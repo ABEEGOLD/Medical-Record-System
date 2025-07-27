@@ -1,3 +1,4 @@
+
 class Appointment:
     def __init__(self, appointment_list, appointment_is_booked_status, appointment_id):
         self.appointment_list = []
@@ -9,11 +10,14 @@ class Appointment:
         self.appointment_is_booked_status = True
         self.appointment_id += 1
 
-    def get_appointments(self):
-        return {self.appointment_list, self.appointment_is_booked_status}
+    def get_appointments_details(self):
+        return {self.appointment_list, self.appointment_is_booked_status, self.appointment_id}
 
-    def get_appointment_status(self):
+    def get_appointment_status(self) -> bool:
         return self.appointment_is_booked_status
+
+    def get_appointment_id(self):
+        return self.appointment_id
 
     def get_appointment_list(self):
         return self.appointment_list
