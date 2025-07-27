@@ -45,3 +45,12 @@ class ContactDetails:
             self.phone_number = value
         else:
             raise TypeError('Phone number must be a number')
+    @property
+    def get_age(self):
+        return self.age
+    @get_age.setter
+    def get_age(self, value):
+        if type(value) == int:
+            self.age = value
+        else:
+            raise TypeError('Age must be a number')

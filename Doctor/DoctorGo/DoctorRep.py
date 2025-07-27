@@ -1,7 +1,7 @@
 import datetime
 
 
-from Contact_details import ContactDetails
+from patient.contact_details import ContactDetails
 
 
 class Doctor_profile:
@@ -10,7 +10,15 @@ class Doctor_profile:
         self.specialization = specialization
         self.contact_details = contact_details
 
-        def get_info(self):
+    def get_info(self):
             return ({self.doctor_id}), ({self.specialization}), ({self.contact_details})
 
+    def getDoctorContactDetails(self):
+        return self.contact_details
+
+    def getDoctorName(self):
+        return self.doctor_id
+
+    def getDoctorSpecialization(self):
+        return self.specialization
 
