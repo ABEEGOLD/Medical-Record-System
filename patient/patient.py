@@ -10,8 +10,11 @@ class Patient:
         self.appointments = []
 
     def __str__(self):
-        return f"Patient ID: {self.id}, Contact: {self.contact_details}, Date of Birth: {self.date_of_birth}, Medical History: {self.medical_history}, Medical Notes: {self.medical_note}, Appointments: {self.appointments}"
-
+        return (
+            f"Patient ID: {self.id}, Contact: {self.contact_details}, "
+            f"Date of Birth: {self.date_of_birth}, Medical History: {self.medical_history}, "
+            f"Medical Notes: {self.medical_note}, Appointments: {len(self.appointments)}"
+        )
     @property
     def get_id(self):
         return self.id
