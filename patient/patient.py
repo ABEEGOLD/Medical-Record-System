@@ -1,13 +1,16 @@
 import datetime
 
 class Patient:
-    def __init__(self, patient_id:int):
+    def __init__(self, patient_id:int,contact_details,date_of_birth=datetime.date.today()):
         self.id = patient_id
         self.date_of_birth = datetime.date.today()
-        self.contact_details = None
+        self.contact_details = contact_details
         self.medical_history = []
         self.medical_note = []
         self.appointments = []
+
+    def __str__(self):
+        return f"Patient ID: {self.id}, Contact: {self.contact_details}, Date of Birth: {self.date_of_birth}, Medical History: {self.medical_history}, Medical Notes: {self.medical_note}, Appointments: {self.appointments}"
 
     @property
     def get_id(self):
@@ -56,6 +59,8 @@ class Patient:
     @property
     def get_appointments(self):
         return self.appointments
+
+
 
 
 
