@@ -1,47 +1,32 @@
+import re
+
 class ContactDetails:
-    def __init__(self, first_name:str, last_name:str, email:str, phone_number:int):
+    def __init__(self, first_name: str, last_name: str, email: str, phone: str):
+        if not self.is_valid_name(first_name):
+            raise ValueError("Invalid first name - must be 2+ alphabetic characters")
+        if not self.is_valid_name(last_name):
+            raise ValueError("Invalid last name - must be 2+ alphabetic characters")
+        if not self._is_valid_email(email):
+            raise ValueError("Invalid email format")
+        if not self._is_valid_phone(phone):
+            raise ValueError("Invalid phone number - must be 10+ digits")
+
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.phone_number = phone_number
+        self.phone = phone
+
+    def is_valid_name(self, name: str) -> bool:
+        return name.isalpha() and len(name) >= 2
+
+    def _is_valid_email(self, email: str) -> bool:
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        return re.match(pattern, email) is not None
+
+    def _is_valid_phone(self, phone: str) -> bool:
+        return phone.isdigit() and len(phone) >= 10
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} <{self.email}>"
 
 
-    def __repr__(self):
-        return f"First_name: {self.first_name} , Last_name: {self.last_name} , Email: <{self.email}> Phone: {self.phone_number}"
-
-    @property
-    def get_first_name(self):
-        return self.first_name
-    @get_first_name.setter
-    def get_first_name(self, value):
-        if type(value) == str:
-            self.first_name = value
-        else:
-            raise TypeError('First name must be a string')
-    @property
-    def get_last_name(self):
-        return self.last_name
-    @get_last_name.setter
-    def get_last_name(self, value):
-        if type(value) == str:
-            self.last_name = value
-        else:
-            raise TypeError('Last name must be a string')
-    @property
-    def get_email(self):
-        return self.email
-    @get_email.setter
-    def get_email(self, value):
-        if type(value) == str:
-            self.email = value
-        else:
-            raise TypeError('Email must be a string')
-    @property
-    def get_phone_number(self):
-        return self.phone_number
-    @get_phone_number.setter
-    def get_phone_number(self, value):
-        if type(value) == int:
-            self.phone_number = value
-        else:
-            raise TypeError('Phone number must be a number')
