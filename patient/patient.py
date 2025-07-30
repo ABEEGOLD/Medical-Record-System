@@ -1,5 +1,7 @@
 import datetime
 
+
+
 class Patient:
     def __init__(self, patient_id:int,contact_details,date_of_birth=datetime.date.today()):
         self.id = patient_id
@@ -62,6 +64,27 @@ class Patient:
     @property
     def get_appointments(self):
         return self.appointments
+
+    @get_appointments.setter
+    def get_appointments(self, value):
+        if isinstance(value, list):
+            self.appointments = value
+
+    def appointments(self, doctor, preferred_time):
+        if preferred_time is None:
+            datetime.date.today()
+
+    def get_patient_info(contact, appointment_date):
+      return Patient(contact, appointment_date)
+
+    @classmethod
+    def request_appointment(self, doctor, preferred_time,appointments):
+        return self.appointments(self, doctor, preferred_time)
+
+    @classmethod
+    def assign_doctor(self, doctor):
+        pass
+
 
 
 
