@@ -8,7 +8,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DoctorGo/DoctorRep.py" beforeDir="false" afterPath="$PROJECT_DIR$/DoctorGo/DoctorRep.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Test/DoctorTest.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Test/DoctorTest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../patient/patient.py" beforeDir="false" afterPath="$PROJECT_DIR$/../patient/patient.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,6 +105,7 @@
       <workItem from="1753623858837" duration="593000" />
       <workItem from="1753708091739" duration="592000" />
       <workItem from="1753880759836" duration="963000" />
+      <workItem from="1753929909587" duration="594000" />
     </task>
     <servers />
   </component>
