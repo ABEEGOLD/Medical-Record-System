@@ -20,7 +20,7 @@ class ContactDetails:
         return name.isalpha() and len(name) >= 2
 
     def _is_valid_email(self, email: str) -> bool:
-        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        pattern = r'^[a-zA-Z0-9._%+-]{1,64}@[a-zA-Z0-9.-]{3,}\.[a-zA-Z]{2,}'
         return re.match(pattern, email) is not None
 
     def _is_valid_phone(self, phone: str) -> bool:
