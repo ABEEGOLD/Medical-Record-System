@@ -168,13 +168,13 @@ Cancelled Appointments: {cancelled_appointments}
 Recent Appointments:
 """
         sorted_appointments = self.appointments.copy()
-        n = len(sorted_appointments)
-        for i in range(n):
-            for j in range(0, n - i - 1):
-                if sorted_appointments[j].date < sorted_appointments[j + 1].date:
-                    temp = sorted_appointments[j]
-                    sorted_appointments[j] = sorted_appointments[j + 1]
-                    sorted_appointments[j + 1] = temp
+        number = len(sorted_appointments)
+        for data in range(number):
+            for num in range(0, number - data - 1):
+                if sorted_appointments[num].date < sorted_appointments[num + 1].date:
+                    temp = sorted_appointments[num]
+                    sorted_appointments[num] = sorted_appointments[num + 1]
+                    sorted_appointments[num + 1] = temp
 
         recent_appointments = []
         count = 0
@@ -186,19 +186,18 @@ Recent Appointments:
                 break
 
         for appt in recent_appointments:
-            report += f" {appt}\n"
+            report += f" {appt} "
 
-        report += "\nRecent Medical Records:\n"
+        report += " Recent Medical Records: "
 
         sorted_records = self.medical_records.copy()
-        n = len(sorted_records)
-        for i in range(n):
-            for j in range(0, n - i - 1):
-                if sorted_records[j].date < sorted_records[j + 1].date:
-                    # Swap records
-                    temp = sorted_records[j]
-                    sorted_records[j] = sorted_records[j + 1]
-                    sorted_records[j + 1] = temp
+        number = len(sorted_records)
+        for data in range(number):
+            for num in range(0, number - data - 1):
+                if sorted_records[num].date < sorted_records[num + 1].date:
+                    temp = sorted_records[num]
+                    sorted_records[num] = sorted_records[num + 1]
+                    sorted_records[num + 1] = temp
 
         recent_records = []
         count = 0
@@ -212,7 +211,7 @@ Recent Appointments:
         for record in recent_records:
             patient = self._find_patient(record.patient_id)
             patient_name = f"{patient.contact.first_name} {patient.contact.last_name}" if patient else "Unknown"
-            report += f"{record} - Patient: {patient_name}\n"
+            report += f"{record} - Patient: {patient_name}"
 
         return report
 
