@@ -1,9 +1,7 @@
 import datetime
 
 import tkinter as tk
-
-from patient.clinic_admin import ClinicAdmin, get_date_input
-
+from patient.clinic_admin import ClinicAdmin,get_validated_choice,get_validated_name,get_validated_date,get_validated_phone,get_validated_email,get_validated_specialty,get_validated_non_empty_string
 root = tk.Tk()
 
 def display_menu():
@@ -20,19 +18,19 @@ def display_menu():
     # label11 = tk.Label(root, text="10. Generate Report", padx=10, pady=10)
     # label12= tk.Label(root, text="11. Exit", padx=10, pady=10)
 
-
-    print("=== WELCOME MERCY CLINIC MANAGEMENT SYSTEM ===")
+    print("===WELCOME TO MERCY CLINIC MANAGEMENT SYSTEM ===")
     print("1. Add Patient")
     print("2. Add Doctor")
-    print("3. View All Patients (with Medical History)")
-    print("4. View Appointments")
-    print("5. Book Appointment")
-    print("6. Cancel Appointment")
-    print("7. Add Medical Record")
-    print("8. View Patient Medical Records")
-    print("9. Search Patient/Doctor")
+    print("3. View Appointments")
+    print("4. Book Appointment")
+    print("5. Cancel Appointment")
+    print("6. Add Medical Record")
+    print("7. View Patient Medical Records")
+    print("8. Search Patient/Doctor")
+    print("9. Search Medical Records")
     print("10. Generate Report")
     print("11. Exit")
+
     # label1.pack()
     # label2.pack()
     # label3.pack()
@@ -47,21 +45,23 @@ def display_menu():
     # label12.pack()
     # root.mainloop()
 
+
 def main():
+
     clinic = ClinicAdmin()
 
     while True:
         display_menu()
-        choice = input("Enter choice (1-8): ").strip()
+        choice = get_validated_choice("Enter choice (1-11): ", ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"])
 
         if choice == "1":
-            print("== Add Patient ==")
+            print("-- Add Patient --")
             try:
-                first_name = input("First Name: ").strip()
-                last_name = input("Last Name: ").strip()
-                email = input("Email: ").strip()
-                phone = input("Phone: ").strip()
-                dob = get_date_input("Date of Birth (YYYY-MM-DD): ")
+                first_name = get_validated_name("First Name: ")
+                last_name = get_validated_name("Last Name: ")
+                email = get_validated_email("Email: ", clinic)
+                phone = get_validated_phone("Phone: ")
+                dob = get_validated_date("Date of Birth (YYYY-MM-DD): ")
 
                 patient = clinic.add_patient(first_name, last_name, email, phone, dob)
                 print(f" Patient added successfully: {patient}")
@@ -69,55 +69,47 @@ def main():
                 print(f" Error: {e}")
 
         elif choice == "2":
-            print("== Add Doctor ==")
+            print("-- Add Doctor --")
             try:
-                first_name = input("First Name: ").strip()
-                last_name = input("Last Name: ").strip()
-                email = input("Email: ").strip()
-                phone = input("Phone: ").strip()
-                specialty = input("Specialty: ").strip()
+                first_name = get_validated_name("First Name: ")
+                last_name = get_validated_name("Last Name: ")
+                email = get_validated_email("Email: ", clinic)
+                phone = get_validated_phone("Phone: ")
+                specialty = get_validated_specialty("Specialty: ")
 
                 doctor = clinic.add_doctor(first_name, last_name, email, phone, specialty)
-                print(f" Doctor added successfully: {doctor}")
+                print(f"Doctor added successfully: {doctor}")
             except ValueError as e:
-                print(f" Error: {e}")
+                print(f"Error: {e}")
 
         elif choice == "3":
-            print("\n-- All Patients with Medical History --")
-            if clinic.patients:
-                for patient in clinic.patients:
-                    clinic.display_patient_with_history(patient)
-
-                while True:
-                    prompt = input("Enter Patient ID for full medical history (or 'back' to return): ").strip()
-                    if prompt.lower() == 'back':
-                        break
-                    try:
-                        patient_id = int(prompt)
-                        clinic.prompt_medical_history(patient_id)
-                    except ValueError:
-                        print("Please enter a valid Patient ID or 'back'")
-            else:
-                print("No patients found.")
-
-
-        elif choice == "4":
-            print("== All Appointments ==")
+            print("-- All Appointments --")
             appointments = clinic.view_appointments()
             if appointments:
-                for index in range(len(appointments)):
-                    for data in range(len(appointments) - 1):
-                        if appointments[data].date > appointments[data + 1].date:
-                            appointments[data], appointments[data + 1] = appointments[data + 1], appointments[data]
+                sorted_appointments = appointments.copy()
+                n = len(sorted_appointments)
+                for i in range(n):
+                    for j in range(0, n - i - 1):
+                        if sorted_appointments[j].date > sorted_appointments[j + 1].date:
+                            temp = sorted_appointments[j]
+                            sorted_appointments[j] = sorted_appointments[j + 1]
+                            sorted_appointments[j + 1] = temp
 
-                for appt in appointments:
+                for appt in sorted_appointments:
                     print(appt)
             else:
                 print("No appointments found.")
 
-        elif choice == "5":
-            print("== Book Appointment ==")
+        elif choice == "4":
+            print("-- Book Appointment --")
             try:
+                if not clinic.patients:
+                    print("No patients available. Please add patients first.")
+                    continue
+                if not clinic.doctors:
+                    print("No doctors available. Please add doctors first.")
+                    continue
+
                 print("Available Patients:")
                 for patient in clinic.patients:
                     print(f"  ID {patient.id}: {patient.contact.first_name} {patient.contact.last_name}")
@@ -126,90 +118,142 @@ def main():
                 for doctor in clinic.doctors:
                     print(f"  ID {doctor.id}: {doctor}")
 
-                patient_id = int(input("Patient ID: "))
-                doctor_id = int(input("Doctor ID: "))
-                date = get_date_input("Appointment Date (YYYY-MM-DD): ")
-                reason = input("Reason for visit: ").strip()
+                patient_ids = []
+                for p in clinic.patients:
+                    patient_ids.append(str(p.id))
+
+                doctor_ids = []
+                for d in clinic.doctors:
+                    doctor_ids.append(str(d.id))
+
+                patient_id = int(get_validated_choice("Patient ID: ", patient_ids))
+                doctor_id = int(get_validated_choice("Doctor ID: ", doctor_ids))
+                date = get_validated_date("Appointment Date (YYYY-MM-DD): ")
+                reason = get_validated_non_empty_string("Reason for visit: ")
 
                 appointment = clinic.book_appointment(patient_id, doctor_id, date, reason)
-                print(f" Appointment booked successfully: {appointment}")
-            except (ValueError, KeyError) as e:
+                print(f"Appointment booked successfully: {appointment}")
+            except ValueError as e:
                 print(f" Error: {e}")
 
-        elif choice == "6":
-            print("== Cancel Appointment ==")
+        elif choice == "5":
+            print("\n-- Cancel Appointment --")
             appointments = clinic.view_appointments()
-            scheduled = [appt for appt in appointments if appt.status == "Scheduled"]
+            scheduled = []
+            for appt in appointments:
+                if appt.status == "Scheduled":
+                    scheduled.append(appt)
 
             if scheduled:
                 print("Scheduled Appointments:")
                 for appt in scheduled:
                     print(appt)
 
-                try:
-                    appt_id = int(input("Enter Appointment ID to cancel: "))
-                    if clinic.cancel_appointment(appt_id):
-                        print(" Appointment cancelled successfully")
-                    else:
-                        print(" Appointment not found or already cancelled")
-                except ValueError:
-                    print(" Invalid appointment ID")
+                valid_ids = []
+                for appt in scheduled:
+                    valid_ids.append(str(appt.id))
+                appt_id = int(get_validated_choice("Enter Appointment ID to cancel: ", valid_ids))
+
+                if clinic.cancel_appointment(appt_id):
+                    print("Appointment cancelled successfully")
+                else:
+                    print("Appointment not found or already cancelled")
             else:
                 print("No scheduled appointments to cancel.")
 
-        elif choice == "7":
-            print("==Add Medical Record==")
+        elif choice == "6":
+            print("-- Add Medical Record --")
             try:
+                if not clinic.patients:
+                    print("No patients available. Please add patients first.")
+                    continue
+
                 print("Available Patients:")
                 for patient in clinic.patients:
-                    clinic.display_patient_with_history(patient)
+                    print(f"  ID {patient.id}: {patient.contact.first_name} {patient.contact.last_name}")
 
-                patient_id = int(input("Patient ID: "))
-                date = get_date_input("Record Date (YYYY-MM-DD): ")
-                diagnosis = input("Diagnosis: ").strip()
-                treatment = input("Treatment: ").strip()
-                record = clinic.add_medical_record(patient_id, date, diagnosis, treatment)
-                print(f"Medical record added successfully: {record['date']} - {record['diagnosis']}")
+                patient_ids = []
+                for p in clinic.patients:
+                    patient_ids.append(str(p.id))
+                    patient_id = int(get_validated_choice("Patient ID: ", patient_ids))
+                    date = get_validated_date("Record Date (YYYY-MM-DD): ")
+                    diagnosis = get_validated_non_empty_string("Diagnosis: ")
+                    treatment = get_validated_non_empty_string("Treatment: ")
+                    doctor_notes = input("Doctor Notes (optional): ").strip()
+                    prescribed_medications = input("Prescribed Medications (optional): ").strip()
+
+                record = clinic.add_medical_record(patient_id, date, diagnosis, treatment,
+                                               doctor_notes, prescribed_medications)
+                print(f"Medical record added successfully: {record}")
+            except ValueError as e:
+                print(f"Error: {e}")
+
+        elif choice == "7":
+            print("\n-- Patient Medical Records --")
+            try:
+                if not clinic.patients:
+                    print("No patients available. Please add patients first.")
+                    continue
+
+                print("Available Patients:")
+                for patient in clinic.patients:
+                    print(f"  ID {patient.id}: {patient.contact.first_name} {patient.contact.last_name}")
+
+                patient_ids = []
+                for p in clinic.patients:
+                    patient_ids.append(str(p.id))
+                    patient_id = int(get_validated_choice("Patient ID: ", patient_ids))
+                    records = clinic.get_patient_medical_records(patient_id)
+
+                if records:
+                    patient = clinic._find_patient(patient_id)
+                    print(f" Medical Records for {patient.contact.first_name} {patient.contact.last_name}:")
+                    for record in records:
+                        print(f"{record}")
+                        print(f"  Treatment: {record.treatment}")
+                        if record.doctor_notes:
+                            print(f"  Doctor Notes: {record.doctor_notes}")
+                        if record.prescribed_medications:
+                            print(f"  Medications: {record.prescribed_medications}")
+                        print(f"  Created: {record.created_at.strftime('%Y-%m-%d %H:%M')}")
+                else:
+                    print("No medical records found for this patient.")
             except ValueError as e:
                 print(f"Error: {e}")
 
         elif choice == "8":
-            print("==Patient Medical Records==")
-            try:
-                print("Available Patients:")
-                for patient in clinic.patients:
-                    clinic.display_patient_with_history(patient)
-
-                patient_id = int(input("\nPatient ID: "))
-                clinic.prompt_medical_history(patient_id)
-            except ValueError as e:
-                print(f"Error: {e}")
-
-
-
-        elif choice == "9":
-            print("== Search ==")
-            print("1. Search Patients")
-            print("2. Search Doctors")
-            search_choice = input("Choose (1-2): ").strip()
+            print("-- Search --")
+            search_choice = get_validated_choice("1. Search Patients\n2. Search Doctors\nChoose (1-2): ", ["1", "2"])
 
             if search_choice == "1":
-                find = input("Enter patient name, ID, or email: ").strip()
-                results = clinic.search_patients(find)
+                term = get_validated_non_empty_string("Enter patient name, ID, or email: ")
+                results = clinic.search_patients(term)
                 print("Patient Search Results:")
-                for patient in results:
-                    print(f"  {patient}")
-                if not results:
-                    print("  No patients found")
+            for patient in results:
+                print(f"  {patient}")
+            if not results:
+                print("  No patients found")
 
             elif search_choice == "2":
-                find = input("Enter doctor name, ID, or specialty: ").strip()
-                results = clinic.search_doctors(find)
+                term = get_validated_non_empty_string("Enter doctor name, ID, or specialty: ")
+                results = clinic.search_doctors(term)
                 print("Doctor Search Results:")
                 for doctor in results:
                     print(f"  {doctor}")
                 if not results:
                     print("  No doctors found")
+
+        elif choice == "9":
+            print("-- Search Medical Records --")
+            term = get_validated_non_empty_string("Enter diagnosis, treatment, or medication: ")
+            results = clinic.search_medical_records(term)
+            print("Medical Records Search Results:")
+            for record in results:
+                patient = clinic._find_patient(record.patient_id)
+                patient_name = f"{patient.contact.first_name} {patient.contact.last_name}" if patient else "Unknown"
+                print(f"  {record} - Patient: {patient_name}")
+            if not results:
+                print("  No medical records found")
 
         elif choice == "10":
             print(clinic.generate_report())
@@ -217,9 +261,6 @@ def main():
         elif choice == "11":
             print("Thank you for using Mercy Clinic Management System!")
             break
-
-        else:
-            print("Invalid choice. Please select 1-8.")
 
 if __name__ == "__main__":
     main()

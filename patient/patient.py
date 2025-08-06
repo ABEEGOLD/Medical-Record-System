@@ -2,10 +2,14 @@ import datetime
 
 from patient.contact_details import ContactDetails
 
-from typing import List, Dict
+from patient.medical_records import MedicalRecord
+
+from typing import List
+
 
 class Patient:
     def __init__(self, patient_id: int, contact: ContactDetails, dob: datetime.date):
+        # Validate patient-specific data
         if not self._is_valid_age(dob):
             raise ValueError("Invalid date of birth - age must be between 0-150")
         if patient_id <= 0:
@@ -15,8 +19,7 @@ class Patient:
         self.contact = contact
         self.dob = dob
         self.appointments = []
-        self.medical_history = []
-
+        self.medical_records = []
 
     def _is_valid_age(self, dob: datetime.date) -> bool:
         today = datetime.date.today()
@@ -30,28 +33,22 @@ class Patient:
         today = datetime.date.today()
         return today.year - self.dob.year - ((today.month, today.day) < (self.dob.month, self.dob.day))
 
-    def add_medical_record(self, date: datetime.date, diagnosis: str, treatment: str):
-        if not diagnosis.strip():
-            raise ValueError("Diagnosis cannot be empty")
-        if not treatment.strip():
-            raise ValueError("Treatment cannot be empty")
+    def add_medical_record(self, record: MedicalRecord):
+        self.medical_records.append(record)
 
-        record = {
-            'date': date,
-            'diagnosis': diagnosis.strip(),
-            'treatment': treatment.strip(),
-            'created_at': datetime.datetime.now()
-        }
-        self.medical_history.append(record)
-        return record
-
-    def get_medical_history(self) -> List[Dict]:
-        history = self.medical_history.copy()
-        for index in range(len(history)):
-            for data in range(len(history) - 1 - index):
-                if history[data]['date'] < history[data + 1]['date']:
-                    history[data], history[data + 1] = history[data + 1], history[data]
-        return history
+    def get_medical_history(self) -> List[MedicalRecord]:
+        # Sort medical records by date (newest first)
+        sorted_records = []
+        for record in self.medical_records:
+            inserted = False
+            for i in range(len(sorted_records)):
+                if record.date > sorted_records[i].date:
+                    sorted_records.insert(i, record)
+                    inserted = True
+                    break
+            if not inserted:
+                sorted_records.append(record)
+        return sorted_records
 
     def __str__(self):
         return f"Patient {self.id}: {self.contact.first_name} {self.contact.last_name} (Age: {self.age})"
